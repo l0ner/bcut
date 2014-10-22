@@ -27,14 +27,16 @@ import argparse
 from textwrap import dedent
 
 class ParseFields(argparse.Action):
-    def splitRange(rng):
+    def splitRange(self, rng):
         val = rng.split('-')
-        if not val[0].isdigit() or not val[1].isdigit():
+        if val[0] != '' and not val[0].isdigit():
+            raise ValueError("Argument is not a number")
+        if val[1] != '' and not val[1].isdigit():
             raise ValueError("Argument is not a number")
         beg = int(val[0]) if val[0] != '' else 0
         end = int(val[1]) if val[1] != '' else 0
         return { 'start': beg, 'end': end }
-    def fieldParse(field):
+    def fieldParse(self, field):
         if '-' in field:
             return self.splitRange(field)
         else:
@@ -50,9 +52,9 @@ class ParseFields(argparse.Action):
         if ',' in values:
             values = values.split(',')
             for i in range(len(values)):
-                values[i] = self.fieldParse(field=values[i])
+                values[i] = self.fieldParse(values[i])
         else:
-            values = self.fieldParse(field=values)
+            values = self.fieldParse(values)
         setattr(namespace, self.dest, values)
 
 def parseArgs():
