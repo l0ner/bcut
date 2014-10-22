@@ -33,9 +33,8 @@ class ParseFields(argparse.Action):
             raise ValueError("Argument is not a number")
         if val[1] != '' and not val[1].isdigit():
             raise ValueError("Argument is not a number")
-        beg = int(val[0]) if val[0] != '' else 0
-        end = int(val[1]) if val[1] != '' else 0
-        return { 'start': beg, 'end': end }
+        return { 'start': int(val[0]) if val[0] != '' else 0, 
+                 'end': int(val[1]) if val[1] != '' else 0 }
     def fieldParse(self, field):
         if '-' in field:
             return self.splitRange(field)
