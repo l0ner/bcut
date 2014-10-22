@@ -64,7 +64,7 @@ def parseArgs():
     parser = argparse.ArgumentParser(
         prog="bcut", # default argv[0]
         # custom usage string, this is usuallly auto-generated
-        usage="cut OPTION... [FILE]...",
+        #usage="cut OPTION... [FILE]...",
         # app description
         description=dedent("""\
             Print selected parts of lines from each FILE to standard output.
@@ -84,7 +84,6 @@ def parseArgs():
         With no FILE, or when FILE is -, read standard input.
                 
         bcut home page: <http://www.github.com/l0ner/bcut/>
-        Report bcut translation bugs to <http://translationproject.org/team/>
         For complete documentation, run: man bcut
                 """),
         formatter_class=argparse.RawDescriptionHelpFormatter
