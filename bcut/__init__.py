@@ -33,8 +33,12 @@ class ParseFields(argparse.Action):
             raise ValueError("Argument is not a number")
         if val[1] != '' and not val[1].isdigit():
             raise ValueError("Argument is not a number")
+        if ( val[0] != '' and val[1] != '' ) \
+                and int(val[0]) > int(val[1]):
+            raise ValueError("Range beginning bigger than end")
         return { 'start': int(val[0]) if val[0] != '' else 0, 
                  'end': int(val[1]) if val[1] != '' else 0 }
+
     def fieldParse(self, field):
         if '-' in field:
             return self.splitRange(field)
@@ -43,20 +47,37 @@ class ParseFields(argparse.Action):
                 return { 'start': int(field), 'end': int(field) }
             else:
                 raise ValueError("Argument is not a number")
+
     def __init__(self, option_strings, dest, nargs=None, **kwargs):
         if nargs is not None:
             raise ValueError("nargs not allowed")
         super(ParseFields, self).__init__(option_strings, dest, **kwargs)
+
     def __call__(self, parser, namespace, values, option_string=None):
-        if ',' in values:
-            values = values.split(',')
-            for i in range(len(values)):
-                values[i] = self.fieldParse(values[i])
+        if option_string == '-b' or option_string == '--bytes':
+            mode = { 'mode': 'bytes' }
+        elif option_string == '-c' or option_string == '--characters':
+            mode = { 'mode': 'chars' }
+        elif option_string == '-f' or option_string == '--fields':
+            mode = { 'mode': 'fields' }
         else:
-            values = self.fieldParse(values)
+            raise ValueError("Critical: Unknown mode! Should be -b/-c/-f")
+
+        if ',' in values:
+            split_values = values.split(',')
+            for i in range(len(split_values)):
+                split_values[i] = self.fieldParse(split_values[i])
+            mode['ranges'] = split_values
+        else:
+            # only one item in range
+            mode['ranges'] = list()
+            mode['ranges'].append(self.fieldParse(values))
+        
+        values = mode
         setattr(namespace, self.dest, values)
 
-def parseArgs():
+
+def parseArgs(args):
     parser = argparse.ArgumentParser(
         prog="bcut", # default argv[0]
         # custom usage string, this is usuallly auto-generated
@@ -86,14 +107,14 @@ def parseArgs():
         )
     lists = parser.add_mutually_exclusive_group(required=True)
     lists.add_argument("-b", "--bytes", 
-            action=ParseFields,
+            action=ParseFields, dest='range',
             help="display only these bytes",
             metavar='LIST')
     lists.add_argument("-c", "--characters",
-            action=ParseFields,
+            action=ParseFields, dest='range',
             help="display only these characters",
             metavar='LIST')
-    lists.add_argument("-f", "--fields", 
+    lists.add_argument("-f", "--fields", dest='range',
             action=ParseFields,
             help="""select only these fields; also print any line that contains 
                     no delimiter character, unless the -s option is specified
@@ -117,12 +138,12 @@ def parseArgs():
             help="""List of input FILEs to be processed. If none are specified 
             the input will be taken from stdin""")
 
-    return parser.parse_args()
+    return parser.parse_args(args)
 
 
 def main():
-    args = parseArgs()
-    print(args)
+    args = parseArgs(sys.argv)
+    print(args.range)
 
     '''with args.file as f:
         for line in f:
