@@ -132,7 +132,7 @@ def parseArgs(args):
             help="do not print lines not containing delimiters")
     parser.add_argument('--output-delimiter', metavar='STRING',
             help="""use STRING as the output delimiter. The default is to use
-                    the inpt delimiter""")
+                    the input delimiter""")
     parser.add_argument('--version', action='version', version='%(prog)s 1.0')
     parser.add_argument('files', nargs='*', default='-', 
             help="""List of input FILEs to be processed. If none are specified 
@@ -142,12 +142,13 @@ def parseArgs(args):
 
 
 def main():
-    parser, args = parseArgs(sys.argv)
+    print(sys.argv[1:])
+    parser, args = parseArgs(sys.argv[1:])
     print(args)
     if args.range['mode'] != 'fields' and args.delimiter != None:
         parser.error('an input delimiter may be specified only when operating '
                      'on fields')
-    if args.range['mode'] != 'fields' and args.only_delimited != None:
+    if args.range['mode'] != 'fields' and args.only_delimited != False:
         parser.error("suppressing non-delimited lines makes sense only when "
                      "operating on fields")
 
