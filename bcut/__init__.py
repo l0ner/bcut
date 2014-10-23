@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-####################################################################
+##########################################################################
 
 import sys
 import argparse
@@ -138,12 +138,18 @@ def parseArgs(args):
             help="""List of input FILEs to be processed. If none are specified 
             the input will be taken from stdin""")
 
-    return parser.parse_args(args)
+    return parser, parser.parse_args(args)
 
 
 def main():
-    args = parseArgs(sys.argv)
-    print(args.range)
+    parser, args = parseArgs(sys.argv)
+    print(args)
+    if args.range['mode'] != 'fields' and args.delimiter != None:
+        parser.error('an input delimiter may be specified only when operating '
+                     'on fields')
+    if args.range['mode'] != 'fields' and args.only_delimited != None:
+        parser.error("suppressing non-delimited lines makes sense only when "
+                     "operating on fields")
 
     '''with args.file as f:
         for line in f:

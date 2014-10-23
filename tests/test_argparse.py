@@ -2,8 +2,8 @@ import bcut
 
 import unittest
 
-class testRanges(unittest.TestCase):
-    knownResults = ( 
+class testArgParser(unittest.TestCase):
+    knownRangeResults = ( 
             ( '1',     [{ 'start': 1, 'end': 1 }] ),
             ( '2',     [{ 'start': 2, 'end': 2 }] ),
             ( '2-',    [{ 'start': 2, 'end': 0 }] ),
@@ -26,11 +26,33 @@ class testRanges(unittest.TestCase):
             )
     )
 
+    knownModeResults = (
+            ( '-b', 'bytes' ),
+            ( '-c', 'chars' ),
+            ( '-f', 'fields' ),
+            ( '--bytes', 'bytes' ),
+            ( '--characters', 'chars' ),
+            ( '--fields', 'fields' )
+    )
+
     def test_ranges(self):
         '''parseArgs should parse ranges correctly'''
-        for rangeStr, expectedResult in self.knownResults:
-            ranges = bcut.parseArgs(['-b', rangeStr]).range['ranges']
-            self.assertEqual(expectedResult, ranges)
+        for rangeStr, expectedResult in self.knownRangeResults:
+            parser, ranges = bcut.parseArgs(['-b', rangeStr])
+            self.assertEqual(expectedResult, ranges.range['ranges'])
+
+    def test_modes(self):
+        '''parseArgs should return cutting mode. Either bytes/chars/fields'''
+        for mode, expectedResult in self.knownModeResults:
+            parser, modeResult = bcut.parseArgs([mode, '1'])
+            self.assertEqual(expectedResult, modeResult.range['mode'])
+
+class badArgParse(unittest.TestCase):
+    failingRanges = [ '10-5', 'N', 'n-', '=-n', 'a-n' ]
+    def test_too_large(self):
+        '''parseArgs shoud fail with incorrect ranges'''
+        for badRange in self.failingRanges:
+            self.assertRaises(ValueError, bcut.parseArgs, ['-b', badRange])
 
 if __name__ == '__main__':
     unittest.main()
