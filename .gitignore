@@ -44,8 +44,7 @@ version.h
 .Trashes
 ehthumbs.db
 Thumbs.db
-*.swp
-*.swo
+*.sw[po]
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

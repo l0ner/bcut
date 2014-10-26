@@ -23,6 +23,7 @@
 
 import sys
 import argparse
+import fileinput
 
 from textwrap import dedent
 
@@ -142,7 +143,6 @@ def parseArgs(args):
 
 
 def main():
-    print(sys.argv[1:])
     parser, args = parseArgs(sys.argv[1:])
     print(args)
     if args.range['mode'] != 'fields' and args.delimiter != None:
@@ -151,10 +151,11 @@ def main():
     if args.range['mode'] != 'fields' and args.only_delimited != False:
         parser.error("suppressing non-delimited lines makes sense only when "
                      "operating on fields")
-
-    '''with args.file as f:
+    
+    print(args.files)
+    with fileinput.FileInput(files=args.files) as f:
         for line in f:
-            print(line, end='')'''
+            print("{:0>2}: {}".format(f.lineno(), line), end='')
 
 if __name__ == '__main__':
     sys.exit(main())
