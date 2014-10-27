@@ -38,13 +38,13 @@ class testArgParser(unittest.TestCase):
     def test_ranges(self):
         '''parseArgs should parse ranges correctly'''
         for rangeStr, expectedResult in self.knownRangeResults:
-            parser, ranges = bcut.parseArgs(['-b', rangeStr])
+            ranges = bcut.parseArgs(['-b', rangeStr])
             self.assertEqual(expectedResult, ranges.range['ranges'])
 
     def test_modes(self):
         '''parseArgs should return cutting mode. Either bytes/chars/fields'''
         for mode, expectedResult in self.knownModeResults:
-            parser, modeResult = bcut.parseArgs([mode, '1'])
+            modeResult = bcut.parseArgs([mode, '1'])
             self.assertEqual(expectedResult, modeResult.range['mode'])
 
 class badArgParse(unittest.TestCase):

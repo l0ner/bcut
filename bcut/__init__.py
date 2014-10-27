@@ -78,7 +78,44 @@ class ParseFields(argparse.Action):
         setattr(namespace, self.dest, values)
 
 
-def parseArgs(args):
+def parseArgs(inArgs):
+    modes = [
+        (('-b', '--bytes'), 
+            {'action': ParseFields, 'dest': 'range', 'metavar': 'LIST',
+                'help': 'display only these bytes' } ),
+        (('-c', '--characters'), 
+            {'action': ParseFields, 'dest': 'range', 'metavar': 'LIST',
+                'help': 'display only these characters' } ),
+        (('-f', '--fields'), 
+            {'action': ParseFields, 'dest': 'range', 'metavar': 'LIST',
+                'help': """select only these fields; also print any line that 
+                           contains no delimiter character, unless the -s 
+                           option is specified""" } ),
+    ]
+
+    arguments = [
+        (("-d", '--delimiter'), 
+            {'metavar': 'DELIM', 'nargs': 1,
+                'help': "use DELIM instead of TAB for field delimiter" } ),
+        (("-n", '--no-byte-split'), 
+            {'action': 'store_true', 
+                'help': "do not slit multi-byte characters (ignored)" } ),
+        (('-C', "--complement"), 
+            {'action': 'store_true', 
+                'help': "complement the set of bytes, characters or fields" } ),
+        (('-i', '--invert'), 
+            {'action': 'store_true', 
+                'help': "count bytes, characters, or fields from the end." } ),
+        (('-s', '--only-delimited'), 
+            {'action': 'store_true', 
+                'help': "do not print lines not containing delimiters" } ),
+        (('-O', '--output-delimiter'), 
+            {'metavar': 'DELIM', 
+                'help': """use DELIM as the output delimiter. The default is to 
+                           use the input delimiter""" } )
+    ]
+
+
     parser = argparse.ArgumentParser(
         prog="bcut", # default argv[0]
         # custom usage string, this is usuallly auto-generated
@@ -106,51 +143,36 @@ def parseArgs(args):
                 """),
         formatter_class=argparse.RawDescriptionHelpFormatter
         )
+
+    # add mode switches
     lists = parser.add_mutually_exclusive_group(required=True)
-    lists.add_argument("-b", "--bytes", 
-            action=ParseFields, dest='range',
-            help="display only these bytes",
-            metavar='LIST')
-    lists.add_argument("-c", "--characters",
-            action=ParseFields, dest='range',
-            help="display only these characters",
-            metavar='LIST')
-    lists.add_argument("-f", "--fields", dest='range',
-            action=ParseFields,
-            help="""select only these fields; also print any line that contains 
-                    no delimiter character, unless the -s option is specified
-                    """,
-            metavar='LIST')
-    parser.add_argument('-d', '--delimiter', nargs=1, metavar='DELIM',
-            help="use DELIM instead of TAB for field delimiter")
-    parser.add_argument('-n', action='store_true',
-            help="Do not split multi-byte characters (no-op for now).")
-    parser.add_argument('--complement', action='store_true',
-            help="Complement the set of selected bytes, characters or fields")
-    parser.add_argument('-i', '--invert', action='store_true',
-            help="Count butes, characters or fields from the end of the string")
-    parser.add_argument('-s', '--only-delimited', action='store_true',
-            help="do not print lines not containing delimiters")
-    parser.add_argument('--output-delimiter', metavar='STRING',
-            help="""use STRING as the output delimiter. The default is to use
-                    the input delimiter""")
+    for arg, opts in modes:
+        lists.add_argument(*arg, **opts)
+
+    # add optional arguments
+    for arg, opts in arguments:
+        parser.add_argument(*arg, **opts)
     parser.add_argument('--version', action='version', version='%(prog)s 1.0')
     parser.add_argument('files', nargs='*', default='-', 
             help="""List of input FILEs to be processed. If none are specified 
             the input will be taken from stdin""")
 
-    return parser, parser.parse_args(args)
+    args = parser.parse_args(inArgs)
 
-
-def main():
-    parser, args = parseArgs(sys.argv[1:])
-    print(args)
+    # check for conflictiong args
     if args.range['mode'] != 'fields' and args.delimiter != None:
         parser.error('an input delimiter may be specified only when operating '
                      'on fields')
     if args.range['mode'] != 'fields' and args.only_delimited != False:
         parser.error("suppressing non-delimited lines makes sense only when "
                      "operating on fields")
+
+    return args
+
+
+def main():
+    args = parseArgs(sys.argv[1:])
+    print(args)
     
     print(args.files)
     with fileinput.FileInput(files=args.files) as f:
