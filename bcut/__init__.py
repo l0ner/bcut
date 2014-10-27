@@ -27,6 +27,8 @@ import fileinput
 
 from textwrap import dedent
 
+from . import handleRanges
+
 class ParseFields(argparse.Action):
     def splitRange(self, rng):
         val = rng.split('-')
@@ -47,6 +49,8 @@ class ParseFields(argparse.Action):
             return self.splitRange(field)
         else:
             if field.isdigit():
+                if field == '0':
+                    raise ValueError("fields and positions are numbered from 1")
                 return { 'start': int(field), 'end': int(field) }
             else:
                 raise ValueError("Argument is not a number")

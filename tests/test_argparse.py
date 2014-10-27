@@ -8,11 +8,11 @@ class testArgParser(unittest.TestCase):
         ( '2',     [{ 'start': 2, 'end': 2 }] ),
         ( '2-',    [{ 'start': 2, 'end': 0 }] ),
         ( '1-5',   [{ 'start': 1, 'end': 5 }] ),
-        ( '-5',    [{ 'start': 0, 'end': 5 }] ),
+        ( '-5',    [{ 'start': 1, 'end': 5 }] ),
         ( '1,3',   [{ 'start': 1, 'end': 1 }, { 'start': 3, 'end': 3 }] ),
         ( '1,2-',  [{ 'start': 1, 'end': 1 }, { 'start': 2, 'end': 0 }] ),
         ( '1,2-5', [{ 'start': 1, 'end': 1 }, { 'start': 2, 'end': 5 }] ),
-        ( '1,-5',  [{ 'start': 1, 'end': 1 }, { 'start': 0, 'end': 5 }] ),
+        ( '1,-5',  [{ 'start': 1, 'end': 1 }, { 'start': 1, 'end': 5 }] ),
         ( '1,2-5,7', [
             { 'start': 1, 'end': 1 }, { 'start': 2, 'end': 5 },
             { 'start': 7, 'end': 7 }
@@ -36,16 +36,25 @@ class testArgParser(unittest.TestCase):
     )
 
     ranges = [
-        { 'start': , 'end': },
-        { 'start': , 'end': },
-        { 'start': , 'end': },
-        { 'start': , 'end': },
-        { 'start': , 'end': },
-        { 'start': , 'end': },
-        { 'start': , 'end': },
-        { 'start': , 'end': },
-        { 'start': , 'end': },
+        { 'start': 1,  'end': 5  },
+        { 'start': 3,  'end': 3  },
+        { 'start': 8,  'end': 10 },
+        { 'start': 9,  'end': 12 },
+        { 'start': 15, 'end': 20 },
+        { 'start': 16, 'end': 19 },
+        { 'start': 25, 'end': 25 },
+        { 'start': 27, 'end': 30 },
+        { 'start': 28, 'end': 0  }
     ]
+
+    sortedRanges = [
+        { 'start': 1,  'end': 5  },
+        { 'start': 8,  'end': 12 },
+        { 'start': 15, 'end': 20 },
+        { 'start': 25, 'end': 25 },
+        { 'start': 27, 'end': 0  }
+    ]
+
 
     def test_ranges(self):
         '''parseArgs should parse ranges correctly'''
@@ -59,8 +68,14 @@ class testArgParser(unittest.TestCase):
             modeResult = bcut.parseArgs([mode, '1'])
             self.assertEqual(expectedResult, modeResult.range['mode'])
 
+    def test_sorting(self):
+        '''sortRanges should return ranges sorted by start and remove 
+           overlapping ones'''
+        bcut.handleRanges.sortRanges(self.ranges)
+        self.assertEqual(self.sortedRanges, self.ranges)
+
 class badArgParse(unittest.TestCase):
-    failingRanges = [ '10-5', 'N', 'n-', '=-n', 'a-n', '0' ]
+    failingRanges = [ '10-5', 'N', 'n-', '=-n', 'a-n', '0-8', '0' ]
     def test_too_large(self):
         '''parseArgs shoud fail with incorrect ranges'''
         for badRange in self.failingRanges:
