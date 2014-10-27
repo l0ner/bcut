@@ -71,7 +71,7 @@ class testArgParser(unittest.TestCase):
     def test_sorting(self):
         '''sortRanges should return ranges sorted by start and remove 
            overlapping ones'''
-        bcut.handleRanges.sortRanges(self.ranges)
+        self.ranges = bcut.handleRanges.sortRanges(self.ranges)
         self.assertEqual(self.sortedRanges, self.ranges)
 
 class badArgParse(unittest.TestCase):
