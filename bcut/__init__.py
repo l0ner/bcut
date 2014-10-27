@@ -34,10 +34,12 @@ class ParseFields(argparse.Action):
             raise ValueError("Argument is not a number")
         if val[1] != '' and not val[1].isdigit():
             raise ValueError("Argument is not a number")
+        if val[0] == '0':
+            raise ValueError("fields and positions are numbered from 1")
         if ( val[0] != '' and val[1] != '' ) \
                 and int(val[0]) > int(val[1]):
             raise ValueError("Range beginning bigger than end")
-        return { 'start': int(val[0]) if val[0] != '' else 0, 
+        return { 'start': int(val[0]) if val[0] != '' else 1, 
                  'end': int(val[1]) if val[1] != '' else 0 }
 
     def fieldParse(self, field):
