@@ -28,9 +28,12 @@ import argparse
 import fileinput
 
 from textwrap import dedent
+    
+from .parseFields import ParseFields
+from .cutLine import cutBytes
 
 def parseArgs(inArgs):
-    from .parseFields import ParseFields
+
     modes = [
         (('-b', '--bytes'), 
             {'action': ParseFields, 'dest': 'range', 'metavar': 'LIST',
@@ -126,10 +129,18 @@ def main():
     args = parseArgs(sys.argv[1:])
     print(args)
     
-    print(args.files)
-    with fileinput.FileInput(files=args.files) as f:
-        for line in f:
-            print("{:0>2}: {}".format(f.lineno(), line), end='')
+    if args.range['mode'] == 'bytes':
+        print('Bytes mode!')
+        with fileinput.FileInput(files=args.files, mode='rb') as f:
+            for line in f:
+                #print("{:0>2}: {}".format(f.lineno(), line))
+                print(cutBytes(line, args.range['ranges'], args.complement,
+                    args.invert).decode())
+    elif args.range['mode'] == 'chars':
+        print("Characters!")
+    else:
+        print("Fields!")
+
 
 if __name__ == '__main__':
     sys.exit(main())
