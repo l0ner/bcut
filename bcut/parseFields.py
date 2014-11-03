@@ -49,11 +49,11 @@ class ParseFields(Action):
             else:
                 raise ValueError("Argument is not a number")
 
-    def sortRanges(l):
+    def sortRanges(self, l):
         '''returns sorted and non-overlapping ranges'''
         l = sorted(l, key=lambda rng: rng['start'])
         i = 0
-        length = len(l)
+        length = len(l) - 1
         while i < length:
             if l[i]['end'] >= l[i+1]['start']:
                 if l[i+1]['end'] == 0 or l[i+1]['end'] > l[i]['end']:
@@ -83,12 +83,30 @@ class ParseFields(Action):
             split_values = values.split(',')
             for i in range(len(split_values)):
                 split_values[i] = self.parseField(split_values[i])
-            mode['ranges'] = sortRanges(split_values)
+            mode['ranges'] = self.sortRanges(split_values)
         else:
             # only one item in range
             mode['ranges'] = list()
-            mode['ranges'].append(self.fieldParse(values))
+            mode['ranges'].append(self.parseField(values))
         
         values = mode
         setattr(namespace, self.dest, values)
 
+def complement(ragnes, maxLen):
+    out = list()
+    i = 0
+    length = len(ranges) - 1
+    while i < length:
+        if ranges[i]['start'] == 1 and i == 0:
+            start = ranges[i]['end'] + 1
+            i += 1
+        elif i == 0:
+            start = 1
+        else:
+            start = ranges[i-1]['end'] + 1
+        end = ranges[i]['start'] - 1
+        out.append({ 'start': start, 'end': end })
+        i += 1
+    if ranges[i-1]['end'] != 0:
+        out.append({ 'start': ranges[i-1]['end'] + 1, 'end': 0 })
+    return out
