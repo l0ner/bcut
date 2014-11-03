@@ -92,11 +92,13 @@ class ParseFields(Action):
         values = mode
         setattr(namespace, self.dest, values)
 
-def complement(ragnes, maxLen):
+def complement(ranges):
+    print(ranges)
     out = list()
     i = 0
     length = len(ranges) - 1
-    while i < length:
+    while i <= length:
+        print(ranges[i])
         if ranges[i]['start'] == 1 and i == 0:
             start = ranges[i]['end'] + 1
             i += 1

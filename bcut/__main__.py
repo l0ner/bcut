@@ -30,6 +30,7 @@ import fileinput
 from textwrap import dedent
     
 from .parseFields import ParseFields
+from .parseFields import complement
 from .cutLine import cutBytes
 
 def parseArgs(inArgs):
@@ -128,6 +129,9 @@ def parseArgs(inArgs):
 def main():
     args = parseArgs(sys.argv[1:])
     print(args)
+
+    if args.complement:
+        args.range['ranges'] = complement(args.range['ranges'])
     
     if args.range['mode'] == 'bytes':
         print('Bytes mode!')
