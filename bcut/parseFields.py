@@ -94,19 +94,44 @@ class ParseFields(Action):
 
 def complement(ranges):
     out = list()
-    i = 0
-    length = len(ranges) - 1
-    while i <= length:
-        if ranges[i]['start'] == 1 and i == 0:
-            start = ranges[i]['end'] + 1
-            i += 1
-        elif i == 0:
-            start = 1
+    length = len(ranges)
+    if length < 2:
+        # only one range
+        if ranges[0]['start'] == 1:
+            # first fields
+            if ranges[0]['end'] == 0:
+                # special case, complement is empty
+                return out
+            else:
+                start = ranges[0]['end'] + 1
+                end = 0
+                out.append({ 'start': start, 'end': end })
         else:
-            start = ranges[i-1]['end'] + 1
-        end = ranges[i]['start'] - 1
-        out.append({ 'start': start, 'end': end })
-        i += 1
-    if ranges[i-1]['end'] != 0:
-        out.append({ 'start': ranges[i-1]['end'] + 1, 'end': 0 })
+            # middle or end fields
+            out.append({ 'start': 1, 'end': ranges[0]['start'] - 1 })
+            if ranges[0]['end'] != 0:
+                # range ends before fields end
+                out.append({ 'start': ranges[0]['end'] + 1, 'end': 0 })
+    else:
+        # more than one range
+        i = 0
+        while i < length:
+            if i == 0:
+                # check first range
+                if ranges[i]['start'] != 1:
+                    #we need begining range
+                    out.append({ 'start': 1, 'end': ranges[i]['start'] - 1 })
+                
+            # process field
+            if i < length - 1:
+                end = ranges[i+1]['start'] - 1
+            else:
+                end = 0
+            
+            if ranges[i]['end'] != 0:
+                start = ranges[i]['end'] + 1
+                out.append({ 'start': start, 'end': end })
+
+            i += 1
+
     return out
