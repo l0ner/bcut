@@ -1,20 +1,44 @@
-def cutBytes(data, ranges, complement=False, invert=False):
+def cutBytes(data, ranges, invert=False):
     out = bytes()
+    if invert:
+        data = reverseData(data)
     for rng in ranges:
-        if rng['end'] == 0:
-            rng['end'] = len(data) - 2
-        out += data[rng['start']-1:rng['end']]
+        if rng['start'] < len(data):
+            if rng['end'] == 0 or rng['end'] > len(data):
+                rng['end'] = len(data) - 1
+            out += data[rng['start']-1:rng['end']]
+    if invert:
+        out = reverseData(out)
     return out
 
-def cutLine(data, mode, ranges, complement, invert, sep='\t'):
-    """Return selected bytes/characters/fields from data
+def cutStr(data, ranges, invert=False):
+    out = str()
+    if invert:
+        data = reverseData(data)
+    for rng in ranges:
+        if rng['start'] < len(data):
+            if rng['end'] == 0 or rng['end'] > len(data):
+                rng['end'] = len(data)
+            out += data[rng['start']-1:rng['end']]
+    if invert:
+        out = reverseData(out)
+    return out
 
-    Positional arguments:
-    data - data to be processed <string>
-    mode - mode to use <string>
-    ranges - ranges to extract from data
-    complement - invert selection mask
-    invert - count data from the end
-    sep - separator to use (default <TAB>) <string>
-    """
-    pass
+def cutFields(data, ranges, invert=False):
+    out = list()
+    if invert:
+        data = reverseData(data)
+    for rng in ranges:
+        if rng['start'] <= len(data):
+            if rng['end'] == 0 or rng['end'] > len(data):
+                end = len(data)
+            else:
+                end = rng['end']
+            for i in range(rng['start'] - 1, end):
+                out.append(data[i])
+    if invert:
+        out = reverseData(out)
+    return out
+
+def reverseData(data):
+    return data[::-1]

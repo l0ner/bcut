@@ -32,6 +32,8 @@ from textwrap import dedent
 from .parseFields import ParseFields
 from .parseFields import complement
 from .cutLine import cutBytes
+from .cutLine import cutStr
+from .cutLine import cutFields
 
 def parseArgs(inArgs):
 
@@ -122,28 +124,45 @@ def parseArgs(inArgs):
     if args.range['mode'] != 'fields' and args.only_delimited != False:
         parser.error("suppressing non-delimited lines makes sense only when "
                      "operating on fields")
+    if args.range['mode'] == 'fields' and args.delimiter == None:
+        args.delimiter = '\t'
 
     return args
 
 
 def main():
     args = parseArgs(sys.argv[1:])
-    print(args)
+    #print(args)
 
     if args.complement:
         args.range['ranges'] = complement(args.range['ranges'])
     
     if args.range['mode'] == 'bytes':
-        print('Bytes mode!')
+        #print('Bytes mode!')
         with fileinput.FileInput(files=args.files, mode='rb') as f:
             for line in f:
                 #print("{:0>2}: {}".format(f.lineno(), line))
-                print(cutBytes(line, args.range['ranges'], args.complement,
+                print(cutBytes(line, args.range['ranges'],
                     args.invert).decode())
     elif args.range['mode'] == 'chars':
-        print("Characters!")
+        #print("Characters!")
+        with fileinput.FileInput(files=args.files, mode='r') as f:
+            for line in f:
+                print(cutStr(line[:-1], args.range['ranges'],
+                    args.invert))
     else:
-        print("Fields!")
+        #print("Fields!")
+        with fileinput.FileInput(files=args.files, mode='r') as f:
+            for line in f:
+                if args.delimiter[0] in line:
+                    line = line[:-1].split(args.delimiter[0])
+                    line = cutFields(line, args.range['ranges'], args.invert)
+                    line = args.delimiter[0].join(line)
+                    print(line)
+                else:
+                    if not args.only_delimited:
+                        print(line)
+
 
 
 if __name__ == '__main__':
