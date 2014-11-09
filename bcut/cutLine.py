@@ -3,10 +3,12 @@ def cutBytes(data, ranges, invert=False):
     if invert:
         data = reverseData(data)
     for rng in ranges:
-        if rng['start'] < len(data):
+        if rng['start'] <= len(data):
             if rng['end'] == 0 or rng['end'] > len(data):
-                rng['end'] = len(data) - 1
-            out += data[rng['start']-1:rng['end']]
+                end = len(data) - 1
+            else:
+                end = rng['end']
+            out += data[rng['start']-1:end]
     if invert:
         out = reverseData(out)
     return out
@@ -18,8 +20,10 @@ def cutStr(data, ranges, invert=False):
     for rng in ranges:
         if rng['start'] < len(data):
             if rng['end'] == 0 or rng['end'] > len(data):
-                rng['end'] = len(data)
-            out += data[rng['start']-1:rng['end']]
+                end = len(data)
+            else:
+                end = rng['end']
+            out += data[rng['start']-1:end]
     if invert:
         out = reverseData(out)
     return out
