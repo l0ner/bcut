@@ -1,0 +1,4 @@
+=== bcut 1.0 ===
+	* First stable release
+	* Full compatibility with GNU Coreutils cut
+	* cutting from the end of string support

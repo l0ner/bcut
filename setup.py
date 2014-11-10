@@ -51,9 +51,10 @@ config = {
             """,
     'entry_points': {
         'console_scripts': [
-            'bcut=bcut:main',
+            'bcut=bcut.__main__:main',
         ],
-    }
+    },
+    'data_files': [ ('share/man/man1', [ ('man/bcut.1') ] ) ]
 }
 
 setup(**config)

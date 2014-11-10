@@ -47,9 +47,6 @@ def parseArgs(inArgs):
         (("-d", '--delimiter'), 
             {'metavar': 'DELIM', 'nargs': 1,
                 'help': "use DELIM instead of TAB for field delimiter" } ),
-        (("-n", '--no-byte-split'), 
-            {'action': 'store_true', 
-                'help': "do not slit multi-byte characters (ignored)" } ),
         (('-C', "--complement"), 
             {'action': 'store_true', 
                 'help': "complement the set of bytes, characters or fields" } ),
@@ -59,15 +56,16 @@ def parseArgs(inArgs):
         (('-s', '--only-delimited'), 
             {'action': 'store_true', 
                 'help': "do not print lines not containing delimiters" } ),
-        (('-O', '--output-delimiter'), 
+        (('--output-delimiter',), 
             {'metavar': 'DELIM', 
                 'help': """use DELIM as the output delimiter. The default is to 
-                           use the input delimiter""" } )
+                           use the input delimiter""" } ),
+        (('-n',), {'help': argparse.SUPPRESS })
     ]
 
 
     parser = argparse.ArgumentParser(
-        prog="bcut 1.0", # default argv[0]
+        prog="bcut", # default argv[0]
         # custom usage string, this is usuallly auto-generated
         usage="cut OPTION... [FILE]...",
         # app description

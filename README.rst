@@ -41,15 +41,13 @@ Dependencies
 
 * >= Python 3.2
 
-Build
------
-
-TODO: None at the time being
-
 Install
 -------
 
-TODO: None at the time being
+Build and install by running:
+
+    $ python setup.py build
+    $ sudo python setup.py install
 
 Usage
 =====

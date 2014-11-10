@@ -1,0 +1,102 @@
+.\" Manpage for bcut.
+.\" Contact pwslts@gmail.com to correct errors or typos.
+.TH man 1 "10 Nov 2014" "1.0" "bcut man page"
+.SH NAME
+bcut \- cut out selected portions of each line of a file
+.SH SYNOPSIS
+.B bcut
+OPTION... [\fIFILE\fR]...
+.SH DESCRIPTION
+The bcut utility cuts out selected portions of each line (as specified by list) 
+from each file and writes them to the standard output. If no file arguments are 
+specified, or a file argument is a single dash (`-'), cut reads from the 
+standard input. The items specified by list can be in terms of column position 
+or in terms of fields delimited by a special character.
+
+Use one, and only one of -b, -c or -f. Each LIST is made up of one range, or 
+many ranges separated by commas. Selected input is written in the same order 
+that it is read, and is written exactly once. Each range is one of:
+
+N    N'th byte, character or field, counted from 1
+
+N-   from N'th byte, character or field, to end of line
+
+N-M  from N'th to M'th (included) byte, character or field
+
+-M   from first to M'th (included) byte, character or field
+.SH OPTIONS
+.TP
+.BR \-b ", " \-\-bytes =\fILIST\fR
+The list specifies byte positions.
+.TP
+.BR \-c ", " \-\-characters =\fILIST\fR
+The list specifies character positions.
+.TP
+.BR \-d ", " \-\-delimiter =\fIDELIM\fR
+Use delim as the field delimiter character instead of the tab character.
+.TP
+.BR \-f ", " \-\-fields =\fILIST\fR
+The list specifies fields, separated in the input by the field delimiter 
+character (see the -d option). Output fields are separated by a single 
+occurrence of the field delimiter character.
+.TP
+.BR \-n
+ignored
+.TP
+.BR \-C ", " \-\-complement
+complement the set of selected bytes, characters or fields
+.TP
+.BR \-s ", " \-\-only-delimited
+Suppress lines with no field delimiter characters.  Unless specified, lines with
+no delimiters are passed through unmodified.
+.TP
+.BR \-\-output-delimiter =\fIDELIM\fR
+use DELIM as the output delimiter. The default is to use the input delimiter
+.TP
+.BR \-\-help
+display help and exit
+.TP
+.BR \-\-version
+display version information and exit
+.SH EXAMPLES
+Extract users' login names and shells from the system passwd(5) file as
+"name:shell" pairs:
+.PP
+.nf
+.RS
+bcut -d ':' -f 1,7 /etc/passwd
+.RE
+.fi
+.PP
+
+Show the names and login times of the currently logged in users:
+.PP
+.nf
+.RS
+who | bcut -c 1-16,26-38
+.RE
+.fi
+.PP
+
+.SH ENVIRONMENT
+
+The LANG, LC_ALL and LC_CTYPE environment variables affect the execution of cut 
+as described in environ(7).
+.SH AUTHOR
+Written by Pawel 'l0ner' Soltys <pwslts@gmail.com>
+.SH REPORTING BUGS
+Report bcut bugs to it's github page issue tracker:
+.br
+<https://github.com/l0ner/bcut/issues>
+.SH COPYRIGHT
+Copyright (C) 2014 Pawel 'l0ner' Soltys
+
+License GPLv3+: GNU GPL version 3 or later
+.br
+<http://gnu.org/licenses/gpl.html>.
+
+This is free software: you are free to change and redistribute it. There is NO 
+WARRANTY, to the extent permitted by law.
+.SH SEE ALSO
+.BR cut(1), 
+.BR paste(1)
