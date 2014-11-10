@@ -5,7 +5,7 @@ def cutBytes(data, ranges, invert=False):
     for rng in ranges:
         if rng['start'] <= len(data):
             if rng['end'] == 0 or rng['end'] > len(data):
-                end = len(data) - 1
+                end = len(data)
             else:
                 end = rng['end']
             out += data[rng['start']-1:end]
