@@ -46,6 +46,8 @@ Install
 
 Build and install by running:
 
+::
+
     $ python setup.py build
     $ sudo python setup.py install
 
@@ -126,4 +128,4 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-:: _Releases: https://github.com/l0ner/bcut/releases/
+.. _Releases: https://github.com/l0ner/bcut/releases/
