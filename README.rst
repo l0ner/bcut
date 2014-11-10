@@ -95,6 +95,11 @@ Usage
 
     With no FILE, or when FILE is -, read standard input.
 
+Download
+========
+
+See Releases_ page for all downloads.
+
 Authors
 =======
 
@@ -120,3 +125,5 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+:: _Releases: https://github.com/l0ner/bcut/releases/
