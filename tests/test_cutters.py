@@ -37,9 +37,9 @@ class testDataCutters(unittest.TestCase):
             self.assertEqual(expected, result)
 
     def test_charaters_cutter(self):
-        '''cutStr should return only selected characters'''
+        '''cutChr should return only selected characters'''
         for ranges, expected in self.knownCharNFieldResults:
-            result = cutLine.cutStr(self.chars, ranges)
+            result = cutLine.cutChr(self.chars, ranges)
             self.assertEqual(expected, result)
 
     def test_field_cutter(self):

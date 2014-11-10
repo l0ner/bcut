@@ -44,7 +44,7 @@ def main():
     elif args.range['mode'] == 'chars':
         with fileinput.FileInput(files=args.files, mode='r') as f:
             for line in f:
-                print(cutStr(line[:-1], args.range['ranges'],
+                print(cutChr(line[:-1], args.range['ranges'],
                     args.invert))
     else:
         with fileinput.FileInput(files=args.files, mode='r') as f:

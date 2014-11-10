@@ -13,7 +13,7 @@ def cutBytes(data, ranges, invert=False):
         out = reverseData(out)
     return out
 
-def cutStr(data, ranges, invert=False):
+def cutChr(data, ranges, invert=False):
     out = str()
     if invert:
         data = reverseData(data)
