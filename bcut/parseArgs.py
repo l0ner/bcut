@@ -67,9 +67,9 @@ def parseArgs(inArgs):
 
 
     parser = argparse.ArgumentParser(
-        prog="bcut", # default argv[0]
+        prog="bcut 1.0", # default argv[0]
         # custom usage string, this is usuallly auto-generated
-        #usage="cut OPTION... [FILE]...",
+        usage="cut OPTION... [FILE]...",
         # app description
         description=dedent("""\
             Print selected parts of lines from each FILE to standard output.

@@ -6,7 +6,7 @@ except ImportError:
 config = {
     'name': 'bcut',
     'packages': ['bcut'],
-    'version': '0.1',
+    'version': '1.0',
     'description': 'bcut - Print selected parts of lines',
     'author': 'Pawel <l0ner> Soltys',
     'author_email': 'pwslts@gmail.com',
@@ -15,8 +15,8 @@ config = {
     'keywords': ['utility', 'cut'],
     'classifiers': [
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Development Status :: 4 - Beta",
+        "Programming Language :: Python :: 3.2",
+        "Development Status :: 5 - Production/Stable", 
         "Environment :: Console",
         "Intended Audience :: End Users/Desktop",
         "Intended Audience :: System Administrators",
