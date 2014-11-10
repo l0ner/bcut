@@ -27,7 +27,7 @@ import fileinput
 from .parseArgs import parseArgs
 from .parseFields import complement
 from .cutLine import cutBytes
-from .cutLine import cutStr
+from .cutLine import cutChr
 from .cutLine import cutFields
 
 def main():
