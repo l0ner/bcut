@@ -21,7 +21,7 @@
 
 ''' Main starting point for bcut. Contains main() entry point '''
 
-import sys
+from sys import argv
 import fileinput
 
 from .parseArgs import parseArgs
