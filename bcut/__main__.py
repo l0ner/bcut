@@ -19,9 +19,9 @@
 #
 ##########################################################################
 
-''' Main starting point for bcut. Contains main() entry point '''
+""" Main starting point for bcut. Contains main() entry point """
 
-from sys import argv
+import sys
 import fileinput
 
 from .parseArgs import parseArgs
@@ -29,6 +29,7 @@ from .parseFields import complement
 from .cutLine import cutBytes
 from .cutLine import cutChr
 from .cutLine import cutFields
+
 
 def main():
     args = parseArgs(sys.argv[1:])
@@ -40,12 +41,12 @@ def main():
         with fileinput.FileInput(files=args.files, mode='rb') as f:
             for line in f:
                 print(cutBytes(line, args.range['ranges'],
-                    args.invert).decode())
+                               args.invert).decode())
     elif args.range['mode'] == 'chars':
         with fileinput.FileInput(files=args.files, mode='r') as f:
             for line in f:
                 print(cutChr(line[:-1], args.range['ranges'],
-                    args.invert))
+                             args.invert))
     else:
         with fileinput.FileInput(files=args.files, mode='r') as f:
             for line in f:
